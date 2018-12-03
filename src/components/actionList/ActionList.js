@@ -13,7 +13,7 @@ class ActionList extends Component {
 
   render() {
     return (
-      <button onClick={() => this.createOrder()}>New Order</button> 
+      <button class="btn" onClick={() => this.createOrder()}><i class="fa fa-plus-square"> New Order</i></button> 
     );
   }
 }

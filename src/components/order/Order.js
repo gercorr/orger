@@ -46,7 +46,7 @@ class Order extends Component {
 
   renderReadMode(){
     return (
-      <div className={'Order'}>
+      <div className={'Order'}>        
         <div className="Time">
           {this.props.time}
         </div>
@@ -57,9 +57,8 @@ class Order extends Component {
           {this.props.details}
         </div>
         <div className="Actions">
-          <button onClick={() => this.enableEditMode()}>Edit</button> 
-          <br/>
-          <button onClick={() => this.delete()}>Delete</button> 
+          <button class="btn" onClick={() => this.delete()}><i class="fa fa-trash"></i></button> 
+          <button class="btn" onClick={() => this.enableEditMode()}><i class="fa fa-edit"></i></button>
         </div>
       </div>
     );
@@ -75,7 +74,7 @@ class Order extends Component {
           <textarea autoFocus value={this.state.value} onChange={(event) => this.handleEdit(event)}/>
         </div>
         <div className="Actions">
-          <button onClick={() => this.save()}>Save</button> 
+          <button class="btn" onClick={() => this.save()}><i class="fa fa-save"></i></button> 
         </div>
       </div>
     );

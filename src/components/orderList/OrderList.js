@@ -4,32 +4,17 @@ import Order from '../order/Order'
 import ActionList from '../actionList/ActionList'
 import OrderService from '../../services/OrderService'
 
-const db = {
-  orders: [
-    {
-      id:1,
-      details:"order one",
-      time:"12/3/2018, 12:10:41 PM"
-    },
-    {
-      id:2,
-      details:"longer order two absajdfb asdkjfnb sadjfn asdjkfn",
-      time:"12/3/2018, 12:10:41 PM"
-    }
-  ]
-}
-
 class OrderList extends Component {
 
   constructor(props) {
     super(props);
     this.state = { 
-      ordersToRender: this.loadOrdersFromDb()
+      ordersToRender: this.retrieveOrders()
     };
   }
 
   onOrderCreate(){
-    const orders = this.loadOrdersFromDb();
+    const orders = this.state.ordersToRender;
     orders.push(
       <div key="newOrder">
         {<Order editMode={true} key="newOrder" details="" onDeleteCallback={(orderId) => this.onOrderDelete(orderId)} onSaveCallback={(orderId, newValue) => this.onOrderSave(orderId, newValue)}/>}
@@ -42,50 +27,36 @@ class OrderList extends Component {
   }
 
   onOrderDelete(orderId){
-    console.log(orderId);
-    db.orders = db.orders.filter(order => order.id !== orderId);
-        
-    this.setState({
-      ordersToRender: this.loadOrdersFromDb()
-    })
+    const result = OrderService.deleteOrder(this.state.localMemoryOrders, orderId);
+    this.renderOrders(result);
   }
 
   onOrderSave(orderId, newValue){
-    console.log(orderId);    
-    if(!orderId){
-      const newId = Math.max.apply(Math, db.orders.map((order) => { return order.id; })) + 1;
-      const date = new Date();
-      const currentTime = date.toLocaleTimeString();
-      const newOrder = {
-        id: newId,
-        details: newValue,
-        time: currentTime
-      }
-      db.orders.push(newOrder)
-    } else {
-      var foundIndex = db.orders.findIndex(order => order.id === orderId);
-      const newobj = {...db.orders[foundIndex], details: newValue}
-      db.orders[foundIndex] = newobj;
-    }
-        
-    this.setState({
-      ordersToRender: this.loadOrdersFromDb()
+    const result = OrderService.updateOrders(this.state.localMemoryOrders, orderId, newValue);
+    this.renderOrders(result);
+  }
+
+  retrieveOrders(){
+    OrderService.getOrders().then((orders) => {
+      this.renderOrders(orders)
     })
   }
 
-  loadOrdersFromDb(){
-    let orders = [];
-
-    for (const order of db.orders) {
-      orders.push(
+  renderOrders(orders){
+    let renderableOrders = [];
+    for (const order of orders.Item.Orders) {
+      renderableOrders.push(
         <div key={order.id}>
           {<Order key={order.id} id={order.id} details={order.details} time={order.time} onDeleteCallback={(orderId) => this.onOrderDelete(orderId)} onSaveCallback={(orderId, newValue) => this.onOrderSave(orderId, newValue)}/>}
         </div>
       );
     }
-
-    return orders;
+    this.setState({
+      ordersToRender: renderableOrders,
+      localMemoryOrders: orders
+    })
   }
+  
 
   render() {
     return (

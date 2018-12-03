@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import ball from './ball.png';
 import OrderList from '../orderList/OrderList';
 import './App.css';
 
@@ -8,7 +7,7 @@ class App extends Component {
     return (
       <div className="App">
         <header className="App-header">
-          <img src={ball} className="App-logo" alt="logo" />
+           <i className="fa far fa-4x fa-list-alt"></i>
           <h1 className="App-title">Orger</h1>
         </header>
         <OrderList/>
