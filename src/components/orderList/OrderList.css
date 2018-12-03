@@ -1,0 +1,17 @@
+.OrderList {
+  display: grid;
+  border-style: solid;
+  grid-gap: 10px;
+  grid-template-columns: auto auto auto;
+  margin: 50px; }
+
+.OrderList-Grid {
+  grid-column-start: 1;
+  grid-column-end: 3;
+  grid-row: 1;
+  display: grid; }
+
+.ActionList {
+  grid-column: 3;
+  grid-row: 1;
+  justify-self: start; }
