@@ -13,12 +13,12 @@ export default {
 
     get: (query) => {
       const queryUrl = query ? url+query : url;
-        return fetch(
-          queryUrl,
-          {
-            mode: 'cors'
-          }
-        ).then(handleErrors);
+      return fetch(
+        queryUrl,
+        {
+          mode: 'cors'
+        }
+      ).then(handleErrors);
     },
     put: (body) => {
       return fetch(
@@ -26,6 +26,16 @@ export default {
         {
           method:'PUT',
           body: JSON.stringify(body),
+          mode: 'cors'
+        }
+      ).then(handleErrors);
+    },
+    delete: (query) => {
+      const queryUrl = query ? url+query : url;
+      return fetch(
+        queryUrl,
+        {
+          method:'DELETE',
           mode: 'cors'
         }
       ).then(handleErrors);

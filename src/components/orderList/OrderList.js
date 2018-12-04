@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './OrderList.css';
+import './OrderList.scss';
 import Order from '../order/Order'
 import ActionList from '../actionList/ActionList'
 import OrderService from '../../services/OrderService'
