@@ -14,10 +14,7 @@ export default {
     get: (query) => {
       const queryUrl = query ? url+query : url;
       return fetch(
-        queryUrl,
-        {
-          mode: 'cors'
-        }
+        queryUrl
       ).then(handleErrors);
     },
     put: (body) => {
@@ -25,8 +22,7 @@ export default {
         url,
         {
           method:'PUT',
-          body: JSON.stringify(body),
-          mode: 'cors'
+          body: JSON.stringify(body)
         }
       ).then(handleErrors);
     },
@@ -35,8 +31,7 @@ export default {
       return fetch(
         queryUrl,
         {
-          method:'DELETE',
-          mode: 'cors'
+          method:'delete'
         }
       ).then(handleErrors);
     }

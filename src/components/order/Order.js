@@ -7,7 +7,8 @@ class Order extends Component {
     super(props);
     this.state = { 
       editMode: props.editMode,
-      value: props.details
+      value: props.details,
+      loading: props.loading
     };
   }
   
@@ -19,7 +20,8 @@ class Order extends Component {
   save(){
     console.log("SAVE: " + this.props.id);
     this.setState({
-      editMode: false
+      editMode: false,
+      loading: true
     })
     this.props.onSaveCallback(this.props.id, this.state.value);
   }
@@ -44,14 +46,19 @@ class Order extends Component {
     return this.renderReadMode();
   }
 
+  renderLoadingMode(){
+    return (
+      <div >    
+        Loading...
+      </div>
+    );
+  }
+
   renderReadMode(){
     return (
       <div className={'Order'}>        
         <div className="Time">
           {this.props.time}
-        </div>
-        <div className="Id">
-          {this.props.id}
         </div>
         <div className="Details">
           {this.props.details}

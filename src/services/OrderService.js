@@ -1,4 +1,5 @@
 import RestService from './RestService'
+import generateGuid from 'uuid/v4'
 
 export default {
     getOrders: () => {
@@ -8,31 +9,33 @@ export default {
     },
 
     deleteOrder: (localMemoryOrders, orderId )=> {
-      localMemoryOrders.Item.Orders = localMemoryOrders.Item.Orders.filter(order => order.id !== orderId);
+      localMemoryOrders.Items = localMemoryOrders.Items.filter(order => order.Id !== orderId);
       
-      RestService.put(localMemoryOrders.Item);
+      RestService.delete("?CompanyId=1&Id="+orderId);
       return localMemoryOrders;
     },
 
     updateOrders: (localMemoryOrders, orderId, newValue )=> {
+      let updatedOrder;
       if(!orderId){
-        let newId = Math.max.apply(Math, localMemoryOrders.Item.Orders.map((order) => { return order.id; })) + 1;
-        newId = isFinite(newId) ? newId : 1;
+        let newId = generateGuid();
         const date = new Date();
         const currentTime = date.toLocaleTimeString();
-        const newOrder = {
-          id: newId,
+        updatedOrder = {
+          CompanyId: 1,
+          Id: newId,
           details: newValue,
           time: currentTime
         }
-        localMemoryOrders.Item.Orders.push(newOrder)
+        localMemoryOrders.Items.push(updatedOrder);
+        
       } else {
-        var foundIndex = localMemoryOrders.Item.Orders.findIndex(order => order.id === orderId);
-        const newobj = {...localMemoryOrders.Item.Orders[foundIndex], details: newValue}
-        localMemoryOrders.Item.Orders[foundIndex] = newobj;
-      }
+        var foundIndex = localMemoryOrders.Items.findIndex(order => order.Id === orderId);
+        const updatedOrder = {...localMemoryOrders.Items[foundIndex], details: newValue}
+        localMemoryOrders.Items[foundIndex] = updatedOrder;
+      }      
+      RestService.put(updatedOrder);
       
-      RestService.put(localMemoryOrders.Item);
       return localMemoryOrders;
     }
 }

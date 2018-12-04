@@ -3,7 +3,7 @@
   text-align: left; 
   border-style: solid;
   grid-gap: 10px;
-  grid-template-columns: 30px auto auto;
+  grid-template-columns: auto auto;
   }
 
 .Time {
@@ -12,17 +12,8 @@
   grid-row: 1;
   justify-self: end;
 }
-
-.Id {
-  grid-column: 1;
-  grid-row: 2;
-  overflow-wrap: break-word;
-  width: 30px;
-  text-align: center; 
-}
-
 .Details {
-  grid-column-start: 2;
+  grid-column-start: 1;
   grid-column-end: 3;
   grid-row: 2;
   overflow-wrap: break-word;

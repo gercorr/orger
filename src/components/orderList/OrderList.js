@@ -9,8 +9,10 @@ class OrderList extends Component {
   constructor(props) {
     super(props);
     this.state = { 
-      ordersToRender: this.retrieveOrders()
+      ordersToRender: null,
+      loading: true
     };
+    this.retrieveOrders();
   }
 
   onOrderCreate(){
@@ -44,10 +46,10 @@ class OrderList extends Component {
 
   renderOrders(orders){
     let renderableOrders = [];
-    for (const order of orders.Item.Orders) {
+    for (const order of orders.Items) {
       renderableOrders.push(
-        <div key={order.id}>
-          {<Order key={order.id} id={order.id} details={order.details} time={order.time} onDeleteCallback={(orderId) => this.onOrderDelete(orderId)} onSaveCallback={(orderId, newValue) => this.onOrderSave(orderId, newValue)}/>}
+        <div key={order.Id}>
+          {<Order key={order.Id} id={order.Id} details={order.details} time={order.time} onDeleteCallback={(orderId) => this.onOrderDelete(orderId)} onSaveCallback={(orderId, newValue) => this.onOrderSave(orderId, newValue)}/>}
         </div>
       );
     }
@@ -59,14 +61,21 @@ class OrderList extends Component {
   
 
   render() {
+    if(this.state.ordersToRender){
+      return (
+        <div className="OrderList">
+          <div className="OrderList-Grid">
+            {this.state.ordersToRender}
+          </div>
+          <div className="ActionList">
+            <ActionList onCreateCallback={() => this.onOrderCreate()}/>
+          </div>
+        </div>
+      );
+    }
     return (
       <div className="OrderList">
-        <div className="OrderList-Grid">
-          {this.state.ordersToRender}
-        </div>
-        <div className="ActionList">
-          <ActionList onCreateCallback={() => this.onOrderCreate()}/>
-        </div>
+        Loading...
       </div>
     );
   }
