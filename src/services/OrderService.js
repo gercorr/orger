@@ -8,35 +8,16 @@ export default {
         })
     },
 
-    deleteOrder: (localMemoryOrders, orderId )=> {
-      localMemoryOrders.Items = localMemoryOrders.Items.filter(order => order.Id !== orderId);
-      
-      RestService.delete("?CompanyId=1&Id="+orderId);
-      return localMemoryOrders;
+    deleteOrder: (orderId )=> {      
+      return RestService.delete("?CompanyId=1&Id="+orderId);
     },
 
-    updateOrders: (localMemoryOrders, orderId, newValue )=> {
-      let updatedOrder;
-      if(!orderId){
-        let newId = generateGuid();
-        const date = new Date();
-        const currentTime = date.toLocaleTimeString();
-        updatedOrder = {
-          CompanyId: 1,
-          Id: newId,
-          details: newValue,
-          time: currentTime
-        }
-        localMemoryOrders.Items.push(updatedOrder);
-        
-      } else {
-        var foundIndex = localMemoryOrders.Items.findIndex(order => order.Id === orderId);
-        const updatedOrder = {...localMemoryOrders.Items[foundIndex], details: newValue}
-        localMemoryOrders.Items[foundIndex] = updatedOrder;
-      }      
-      RestService.put(updatedOrder);
-      
-      return localMemoryOrders;
+    updateOrders: (updatedObject)=> {
+      updatedObject.Id = updatedObject.Id || generateGuid();
+      const date = new Date();
+      updatedObject.time = updatedObject.time || date.getTime();
+      updatedObject.CompanyId = updatedObject.CompanyId || 1;
+      return RestService.put(updatedObject);
     }
 }
 

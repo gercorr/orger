@@ -29,33 +29,37 @@ class OrderList extends Component {
   }
 
   onOrderDelete(orderId){
-    const result = OrderService.deleteOrder(this.state.localMemoryOrders, orderId);
-    this.renderOrders(result);
+    return OrderService.deleteOrder(orderId).then(()=>{
+      return this.retrieveOrders()
+    })
   }
 
-  onOrderSave(orderId, newValue){
-    const result = OrderService.updateOrders(this.state.localMemoryOrders, orderId, newValue);
-    this.renderOrders(result);
+  onOrderSave(updatedObject){
+    return OrderService.updateOrders(updatedObject).then(()=>{
+      return this.retrieveOrders()
+    })
   }
 
   retrieveOrders(){
-    OrderService.getOrders().then((orders) => {
-      this.renderOrders(orders)
+    return OrderService.getOrders().then((orders) => {
+      return this.renderOrders(orders)
     })
   }
 
   renderOrders(orders){
+    const sortedOrders = orders.Items.sort((a, b) => {
+      return a.time - b.time;
+    });
     let renderableOrders = [];
-    for (const order of orders.Items) {
+    for (const order of sortedOrders) {
       renderableOrders.push(
         <div key={order.Id}>
-          {<Order key={order.Id} id={order.Id} details={order.details} time={order.time} onDeleteCallback={(orderId) => this.onOrderDelete(orderId)} onSaveCallback={(orderId, newValue) => this.onOrderSave(orderId, newValue)}/>}
+          {<Order key={order.Id} Id={order.Id} details={order.details} time={order.time} onDeleteCallback={(orderId) => this.onOrderDelete(orderId)} onSaveCallback={(updatedObject) => this.onOrderSave(updatedObject)}/>}
         </div>
       );
     }
     this.setState({
-      ordersToRender: renderableOrders,
-      localMemoryOrders: orders
+      ordersToRender: renderableOrders
     })
   }
   
@@ -75,7 +79,7 @@ class OrderList extends Component {
     }
     return (
       <div className="OrderList">
-        Loading...
+        <i className="fa fa-spinner fa-spin"></i>
       </div>
     );
   }

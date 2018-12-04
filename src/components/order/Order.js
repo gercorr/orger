@@ -13,21 +13,34 @@ class Order extends Component {
   }
   
   delete(){
-    console.log("DELETE:" + this.props.id);
-    this.props.onDeleteCallback(this.props.id);
-  }
-
-  save(){
-    console.log("SAVE: " + this.props.id);
     this.setState({
-      editMode: false,
       loading: true
     })
-    this.props.onSaveCallback(this.props.id, this.state.value);
+    this.props.onDeleteCallback(this.props.Id).then(() => {
+      this.setState({
+        loading: false
+      })
+    })
+  }
+
+  save(){    
+    this.setState({
+      loading: true,
+      editMode: false
+    })
+    const data = {
+      Id: this.props.Id,
+      time: this.props.time,
+      details: this.props.value || this.state.value
+    }
+    this.props.onSaveCallback(data).then(() => {
+      this.setState({
+        loading: false
+      })
+    })
   }
 
   enableEditMode(){
-    console.log("EDIT: " + this.props.id);
     this.setState({
       editMode: true
     })
@@ -39,6 +52,9 @@ class Order extends Component {
   }
 
   render() {
+    if(this.state.loading){
+      return this.renderLoadingMode();
+    }
     if(this.state.editMode){
       return this.renderEditMode();
     }
@@ -46,10 +62,28 @@ class Order extends Component {
     return this.renderReadMode();
   }
 
+  readableDate(){
+    if(this.props.time){
+      var date = new Date(this.props.time);
+      // Hours part from the timestamp
+      var hours = date.getHours();
+      // Minutes part from the timestamp
+      var minutes = "0" + date.getMinutes();
+      // Seconds part from the timestamp
+      var seconds = "0" + date.getSeconds();
+
+      // Will display time in 10:30:23 format
+      return hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+    }
+    return '';
+  }
+
   renderLoadingMode(){
     return (
-      <div >    
-        Loading...
+      <div className='Order'>     
+        <div className="Loading">   
+          <i className="fa fa-spinner fa-spin"></i>
+        </div>
       </div>
     );
   }
@@ -58,14 +92,14 @@ class Order extends Component {
     return (
       <div className={'Order'}>        
         <div className="Time">
-          {this.props.time}
+          {this.readableDate()}
         </div>
         <div className="Details">
           {this.props.details}
         </div>
         <div className="Actions">
-          <button class="btn" onClick={() => this.delete()}><i class="fa fa-trash"></i></button> 
-          <button class="btn" onClick={() => this.enableEditMode()}><i class="fa fa-edit"></i></button>
+          <button className="btn" onClick={() => this.delete()}><i className="fa fa-trash"></i></button> 
+          <button className="btn" onClick={() => this.enableEditMode()}><i className="fa fa-edit"></i></button>
         </div>
       </div>
     );
@@ -75,13 +109,13 @@ class Order extends Component {
     return (
       <div className={'Order'}>
         <div className="Time">
-          {this.props.time}
+          {this.readableDate()}
         </div>
         <div className="Details">
           <textarea autoFocus value={this.state.value} onChange={(event) => this.handleEdit(event)}/>
         </div>
         <div className="Actions">
-          <button class="btn" onClick={() => this.save()}><i class="fa fa-save"></i></button> 
+          <button className="btn" onClick={() => this.save()}><i className="fa fa-save"></i></button> 
         </div>
       </div>
     );

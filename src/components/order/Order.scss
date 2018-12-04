@@ -19,6 +19,13 @@
   overflow-wrap: break-word;
   width: 500px;
 }
+.Loading {
+  grid-column: 2;
+  grid-row: 2;
+  width: 500px;
+  height: 50px;
+  text-align: center; 
+}
 
 .Details textarea {
   width: 100%;
